@@ -1,0 +1,12 @@
+#grid{
+    display: grid;
+    grid-template-columns: 50px 50px 50px;
+}
+.hidden{
+    border: 3px solid rgb(60, 60, 60);
+    width: 90px;
+    height: 90px;
+    /* vertical-align: middle; */
+    text-align: center;
+    cursor: pointer;
+}
