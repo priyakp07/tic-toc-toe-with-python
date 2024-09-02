@@ -5,7 +5,7 @@
 #grid{
     display: grid;
     grid-template-columns: 50px 50px 50px;
-}
-.hidden{
+ }
+ .hidden{
     display: none;
-}
+} 

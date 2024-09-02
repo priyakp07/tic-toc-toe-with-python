@@ -13,7 +13,7 @@
   </head>
 
   <body>
-    <py-script src="./main.py"></py-script>
+    <!-- <py-script src="./main.py"></py-script> -->
     <div id="TicTocToe">
         <h3 id="message">loading</h3>
         <div id="grid">
@@ -21,7 +21,8 @@
                 <span id="pos-1-x" class="hidden">X</span>
                 <span id="pos-1-o" class="hidden">O</span>
                 <span id="pos-1-none" class="hidden">
-                    <button id="pos-1-button">1</button>
+                    <button id="pos-1-button"
+                            pys-onclick = "lamda e : cell_click(0)">1</button>
                 </span>
             </div>
 
@@ -29,7 +30,8 @@
                 <span id="pos-2-x" class="hidden">X</span>
                 <span id="pos-2-o" class="hidden">O</span>
                 <span id="pos-2-none" class="hidden">
-                    <button id="pos-2-button">2</button>
+                    <button id="pos-2-button"
+                            pys-onclick = "lamda e : cell_click(1)">2</button>
                 </span>
             </div>
 
@@ -37,7 +39,8 @@
                 <span id="pos-3-x" class="hidden">X</span>
                 <span id="pos-3-o" class="hidden">O</span>
                 <span id="pos-3-none" class="hidden">
-                    <button id="pos-3-button">3</button>
+                    <button id="pos-3-button"
+                            pys-onclick = "lamda e : cell_click(2)">3</button>
                 </span>
             </div>
 
@@ -45,7 +48,8 @@
                 <span id="pos-4-x" class="hidden">X</span>
                 <span id="pos-4-o" class="hidden">O</span>
                 <span id="pos-4-none" class="hidden">
-                    <button id="pos-4-button">4</button>
+                    <button id="pos-4-button"
+                            pys-onclick = "lamda e : cell_click(3)">4</button>
                 </span>
             </div>
 
@@ -53,7 +57,8 @@
                 <span id="pos-5-x" class="hidden">X</span>
                 <span id="pos-5-o" class="hidden">O</span>
                 <span id="pos-5-none" class="hidden">
-                    <button id="pos-1-button">5</button>
+                    <button id="pos-1-button"
+                            pys-onclick = "lamda e : cell_click(4)">5</button>
                 </span>
             </div>
 
@@ -61,7 +66,8 @@
                 <span id="pos-6-x" class="hidden">X</span>
                 <span id="pos-6-o" class="hidden">O</span>
                 <span id="pos-6-none" class="hidden">
-                    <button id="pos-6-button">6</button>
+                    <button id="pos-6-button"
+                            pys-onclick = "lamda e: cell_click(5)">6</button>
                 </span>
             </div>
 
@@ -69,7 +75,8 @@
                 <span id="pos-7-x" class="hidden">X</span>
                 <span id="pos-7-o" class="hidden">O</span>
                 <span id="pos-7-none" class="hidden">
-                    <button id="pos-7-button">7</button>
+                    <button id="pos-7-button"
+                            pys-onclick = "lamda e: cell_click(6)">7</button>
                 </span>
             </div>
 
@@ -77,7 +84,8 @@
                 <span id="pos-8-x" class="hidden">X</span>
                 <span id="pos-8-o" class="hidden">O</span>
                 <span id="pos-8-none" class="hidden">
-                    <button id="pos-8-button">8</button>
+                    <button id="pos-8-button"
+                            pys-onclick = "lamda e : cell_click(7)">8</button>
                 </span>
             </div>
 
@@ -85,9 +93,80 @@
                 <span id="pos-9-x" class="hidden">X</span>
                 <span id="pos-9-o" class="hidden">O</span>
                 <span id="pos-9-none" class="hidden">
-                    <button id="pos-9-button">9</button>
+                    <button id="pos-9-button"
+                            pys-onclick = "lamda e : cell_click(8)">9</button>
                 </span>
             </div>
         </div>
+    </div>
+        <py-script>
+        def cell_click(position):
+            game.play_turn(position)
+        def update_cell(values):
+            for i, value in enumerate(values, start=1):
+                Element(f"pos-{i}-x").add_class("hidden")
+                Element(f"pos-{i}-o").add_class("hidden")
+                Element(f"pos-{i}-none").add_class("hidden")
+            if value == 0:
+                Element(f"pos-{i}-x").remove_class("hidden")
+            elif value == 1:
+                Element(f"pos-{i}-o").remove_class("hidden")
+            else:
+                Element(f"pos-{i}-none").remove_class("hidden")
+        
+        def display_message(value):
+            Element("message").write(value)
+        
+        class TicTocToe:
+            def start(self):
+                self.player = 0
+                self.cells = [None] * 9
+                self.game_running = True
+                display_message("X Turn")
+                update_cell(self.cells)
+        
+            def play_turn(self, position):
+                if not self.game_running:
+                    return
+                if self.cells[position] != None:
+                    display_message("Invalid position")
+                    return
+                
+                self.cells[position] = self.player
+                update_cell(self.cells)
+                if not self.is_game_over():
+                    self.next_player()
+        
+            def next_player(self):
+                player_messages = ["X Turn", "O Turn"]
+                self.player(self.player + 1) % 2
+                display_message(player_messages[self.player])
+        
+            def is_game_over(self):
+                if self.is_winner():
+                    win_messages = ["X Turn", "O Turn"]
+                    display_message(win_messages[self.player])
+                    self.game_running = False
+                    return True
+            
+                if self.is_draw():
+                    display_message("Draw")
+                    self.game_running = False
+                    return True
+                return False
+            
+            def is_winner(self):
+                win_pattern = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
+                for first, second, third in win_pattern:
+                    if self.cells[first] == self.cells[second] == self.cells[third] == self.player:
+                        return True
+                return False
+            
+            def is_draw(self):
+                return all(val != None for val in self.cells)
+            
+        game = TicTocToe()
+        game.start()
+        </py-script>
     </body> 
 </html> 
